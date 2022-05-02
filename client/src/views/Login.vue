@@ -38,7 +38,7 @@
                 <button
                   type="button"
                   class="btn btn-primary form-control"
-                  @click="checkUsernameValidity"
+                  @click="loginUser"
                 >
                   Login
                 </button>
@@ -57,3 +57,35 @@
     </div>
   </div>
 </template>
+<script>
+import axios from 'axios'
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      checkbox: false
+    }
+  },
+  methods: {
+    loginUser() {
+      let url = '/apinew/login/'
+      var form = new FormData();
+      form.append('username', this.username);
+      form.append('password', this.password);
+      axios({
+          method: 'post',
+          url: url,
+          data: form,
+        })
+        .then(response => {
+          this.$router.push({path: '/'})
+          console.log(response)
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    }
+  }
+}
+</script>
