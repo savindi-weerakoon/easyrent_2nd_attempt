@@ -15,6 +15,9 @@
         <button type="button" class="btn btn-secondary"> <router-link cls to="/login" class="text-light">Login </router-link></button>
       </div>
       <div class="p-2">
+        <button type="button" class="btn btn-secondary"> <router-link cls to="/login" class="text-light" @click="getlogout">Logout </router-link></button>
+      </div>
+      <div class="p-2">
         <button type="button" class="btn btn-secondary"> <router-link cls to="/viewPosts" class="text-light">Shop</router-link></button>
       </div>
       <div class="p-2">
@@ -29,7 +32,15 @@
 
 
 <script>
+import Cookies from 'js-cookie'
 export default {
   name: "header-nav",
+  data(){},
+  methods: {
+    getlogout(){
+      Cookies.remove('token')
+      Cookies.remove('user')
+    }
+  },
 };
 </script>

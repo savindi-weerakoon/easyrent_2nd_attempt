@@ -5,9 +5,9 @@
       <li class="list-group-item bg-light mt-3 pt-2 pb-0 pl-4 pr-4" v-for="(review, index) in reviewDetails" :key="index">
         <star-rating :star-size="24"></star-rating>
         <blockquote class="blockquote">
-          <p class="mb-0"><small>{{reviewDetails.review}}</small></p>
-          <footer class="blockquote-footer mt-2"><small>{{reviewDetails.firstname}} {{reviewDetails.lastname}}</small></footer>
-          <p class="mt-1 mb-0"><small>{{reviewDetails.timestamp}}</small></p>
+          <p class="mb-0"><small>{{review.review}}</small></p>
+          <footer class="blockquote-footer mt-2"><small>{{review.firstname}} {{review.lastname}}</small></footer>
+          <p class="mt-1 mb-0"><small>{{review.timestamp}}</small></p>
         </blockquote>
       </li>
     </ul>
@@ -36,41 +36,22 @@ export default {
     StarRating,
   },
   methods:{
-    getPost() {
-      let url = "/apinew/getReviewDetails/";
-      var form = new FormData();
-      form.append("post_id", this.post_id);
+    getCategoriesView() {
+      let url = "/apinew/getReviewDetails/?post_id=1";
       axios({
-        method: "post",
+        method: "get",
         url: url,
-        data: form,
       })
         .then((response) => {
-          console.log(response);
+          this.reviewDetails = response.data.postReviews;
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    getCategoriesView() {
-      let url = '/apinew/getReviewDetails/'
-      axios({
-        method: "get",
-        url: url,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          debugger
-          this.reviewDetails = response.data.reviewDetails;
-        }
-      })
-      .catch(error => {
-        console.error(error)
-      })
-    },
   },
-    mounted() {
-    this.getPost();
+  mounted() {
+    this.getCategoriesView();
   },
 };
 </script>

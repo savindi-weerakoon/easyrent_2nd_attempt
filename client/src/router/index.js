@@ -128,12 +128,20 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../components/common/Reviews.vue')
   },
   {
-    path: '/addReview',
-    name: 'AddReview',
+    path: '/addItemReview/:post_id',
+    name: 'AddItemReview',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/common/AddReview.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/AddItemReview.vue')
+  },
+  {
+    path: '/addUserReview/:tenant_id',
+    name: 'AddUserReview',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/AddUserReview.vue')
   },
 ]
 
