@@ -9,7 +9,7 @@
 
 <style lang="scss" scoped>
 .banner-image {
-  background-image: url("./../../assets/images/image_01.jpg");
+  background-image: url("./../../assets/images/easyrent-banner-01.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

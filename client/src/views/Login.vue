@@ -28,7 +28,7 @@
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  v-model="checkbox"
+                  v-model="isRememberMe"
                 />
                 <label class="form-check-label" for="exampleCheck1"
                   >Remember Me</label
@@ -59,12 +59,13 @@
 </template>
 <script>
 import axios from 'axios'
+import Cookies from 'js-cookie'
 export default {
   data() {
     return {
       username: '',
       password: '',
-      checkbox: false
+      isRememberMe: false,
     }
   },
   methods: {
@@ -79,12 +80,44 @@ export default {
           data: form,
         })
         .then(response => {
-          this.$router.push({path: '/'})
-          console.log(response)
+          this.getUserDetails(response.data.token)
+          // console.log(response)
         })
         .catch(error => {
           console.error(error)
         })
+    },
+    getUserDetails(token) {
+      let url = '/apinew/getUser/'
+      var form = new FormData();
+      form.append('token', token);
+      axios({
+        method: 'post',
+        url: url,
+        data: form,
+      })
+      .then(response => {
+        if (response.status === 200) {
+          debugger;
+          const userString = JSON.stringify(response.data.user)
+          if (this.isRememberMe) {
+            Cookies.set('token', token, { expires: 30 })
+            Cookies.set('user', userString, { expires: 30 })
+          } else {
+            Cookies.set('token', token)
+            Cookies.set('user', userString)
+          }
+          this.$router.push({path: '/'})
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      });
+    },
+  },
+  mounted() {
+    if (this.user) {
+      this.$router.push({path: '/'})
     }
   }
 }

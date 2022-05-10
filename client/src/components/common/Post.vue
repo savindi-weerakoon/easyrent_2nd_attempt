@@ -1,19 +1,23 @@
 <template>
-  <div class="post pt-5">
+  <div v-if="post" class="post pt-5">
     <div class="card ml-3" style="width: 18rem">
       <img
         class="card-img-top"
-        src="./../../assets/images/image_02.jpg"
+        :src="`http://localhost/easyrentnew/apinew/uploads/items/${post.img}`"
         alt="Card image cap"
       />
       <hr />
       <div class="card-body pt-1">
-        <h5 class="card-title d-flex align-items-center">Canon Camera</h5>
+        <h5 class="card-title d-flex align-items-center">{{post.post_title}}</h5>
+        <div class="d-flex w-100">
+            <vue-material-icon name="favorite" :size="32"></vue-material-icon>
+            <span class="d-flex align-items-center ml-2">({{post.avg_rate}})</span>
+          </div>
         <p class="card-text">
-          This is a high quality canon camera with high quality features.
+          {{post.content}}
         </p>
         <div class="badge badge-warning d-flex align-items-center col-md-3">
-          <h8>Per Day</h8>
+          <h8>{{post.rent_type_id === 1 ? 'per day' : 'per duration'}}</h8>
         </div>
         <h4>
           <span
@@ -25,14 +29,14 @@
               align-items-center
             "
             style="width: 120px; height: 30px"
-            >Rs.10750/=</span
+            >Rs.{{post.price}}/=</span
           ><br />
         </h4>
         <p class="mb-0 mt-1 d-flex align-items-center">
-          <small>By Amal Perera</small>
+          <small>By {{post.firstname}} {{post.lastname}}</small>
         </p>
         <p class="mb-0 d-flex align-items-center">
-          <small><em>Horana, Kaluthara</em></small>
+          <small><em>{{post.city}}, {{post.district}}</em></small>
         </p>
       </div>
     </div>
@@ -40,7 +44,15 @@
 </template>
 
 <script>
+
 export default {
   name: "Post",
+  components: {
+  },
+  props: {
+    post: {
+      type: Object
+    }
+  }
 }
 </script>

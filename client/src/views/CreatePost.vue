@@ -1,125 +1,474 @@
 <template>
-  <div class="container py-5"></div>
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-      <div class="form-group">
-        <label>Select Province</label>
-        <select class="form-control">
-          <option>Western</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Select District</label>
-        <select class="form-control">
-          <option>Kaluthara</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Select City</label>
-        <select class="form-control">
-          <option>Colombo</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-      <div class="row">
-        <div class="col-12">
-          <div class="form-group full-width">
-            <label>Item Name </label>
-            <input class="form-control" placeholder="Canon 123" />
-          </div>
-        </div>
-      </div>
-      <hr class="mb-1"/>
-    </div>
+  <div class="container py-4">
     <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
+      <div class="col-md-6">
         <div class="row">
-          <div class="col-12">
-            <div class="form-group full-width">
-              <label>Item Images </label>
-              <img
-                class="img-fluid shadow-sm w-100"
-                img
-                src="./../assets/images/image_02.jpg"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Upload</span>
-        </div>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="inputGroupFile01" />
-          <label class="custom-file-label" for="inputGroupFile01"
-            >Click to select images</label
+          <div
+            class="form-group col-md-3 col-lg-4"
+            v-for="(categoryItem, index) in categoriesList"
+            :key="index"
           >
+            <select
+              @change="getCategories(form.selectedCatId)"
+              v-model="form.selectedCatId"
+              class="form-control"
+            >
+              <option
+                v-for="category in categoryItem.categories"
+                :key="category.category_id"
+                :value="{
+                  cat: category,
+                  level: index,
+                }"
+              >
+                {{ category.category_name }}
+              </option>
+            </select>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-md-12 col-lg-6">
-      <div class="form-group full-width">
-        <label>Description</label>
-        <textarea class="form-control" style="min-height:200px;" placeholder="This is a cannon camera"></textarea>
-          <hr class="mb-1"/>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-3">
-      <label>Rent Type</label>
-      <div class="form-group ">
-        <select class="form-control">
-          <option>Per Day</option>
-          <option>One Time</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-      <label>Rent Price</label>
-      <div class="row">
-      <input class="form-control" type="number" placeholder="1500">
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-      <div class="col-md-12 col-lg-6">
-        <label>Contact Numbers</label>
-        <div class="col-md-12 col-lg-6">
-          <vue-fontawesome icon="mobile-phone" color="#28a745"></vue-fontawesome>
-          <div class="col-md-12 col-lg-6">0776789900</div>
-        </div>
-        <hr class="mb-1"/>
-        <div class="col-md-12 col-lg-6">
-          <vue-fontawesome icon="mobile-phone" color="#28a745"></vue-fontawesome>
-          <div class="col-md-12 col-lg-6">0346789900</div>
-        </div>
-        <hr class="mb-1"/>
-        <hr class="mb-1"/>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-md-12 col-lg-6">
-        <label>Item Owner</label>
-        <div class="form-group full-width">
-          <p>By <strong>Amal Perera</strong></p>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-          <div class="col-md-12 col-lg-9">
-            <div class="full-width d-flex justify-content-end">
-              <button type="button" class="btn btn-light mr-3">Cancel</button>
-              <button type="button" class="btn btn-success" @click="publish">Publish</button>
+        <div class="row">
+          <div class="col-md-3 col-lg-4">
+            <div class="form-group">
+              <label>Select Province</label>
+              <select
+                class="form-control"
+                v-model="form.selectedProvinceId"
+                @change="getDistricts"
+              >
+                <option
+                  v-for="province in provinces"
+                  :key="province.id"
+                  :value="province.id"
+                >
+                  {{ province.province }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-2">
+            <div v-if="districts.length > 0" class="form-group">
+              <label>Select District</label>
+              <select
+                class="form-control"
+                v-model="form.selectedDistrictId"
+                @change="getCities"
+              >
+                <option
+                  v-for="district in districts"
+                  :key="district.id"
+                  :value="district.id"
+                >
+                  {{ district.district }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-2">
+            <div v-if="cities.length > 0" class="form-group">
+              <label>Select City</label>
+              <select class="form-control" v-model="form.selectedCityId">
+                <option v-for="city in cities" :key="city.id" :value="city.id">
+                  {{ city.city }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
+        <div
+          v-if="
+            form.selectedProvinceId &&
+            form.selectedDistrictId &&
+            form.selectedCityId
+          "
+        >
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group full-width">
+                <label>Item Name </label>
+                <input
+                  class="form-control"
+                  placeholder="Canon 123"
+                  v-model="form.itemName"
+                />
+              </div>
+            </div>
+          </div>
+          <hr class="mb-1" />
+        </div>
+
+        <div
+          v-if="
+            form.selectedProvinceId &&
+            form.selectedDistrictId &&
+            form.selectedCityId
+          "
+        >
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group full-width">
+                <label>Item Name </label>
+                <input
+                  class="form-control"
+                  placeholder="Canon 123"
+                  v-model="form.itemName"
+                />
+              </div>
+            </div>
+          </div>
+          <hr class="mb-1" />
+          <div class="row">
+            <div class="col-12">
+              <div class="w-100 form-group">
+                  <div
+                    v-if="form.selectedImage"
+                    class="shadow-sm main-image"
+                    :style="`background-image: url(http://localhost/easyrentnew/apinew/uploads/items/${form.selectedImage.name})`"
+                  ></div>
+              </div>
+              <div class="row mb-3">
+                <div
+                  class="col-2 position-relative"
+                  v-for="image in form.images"
+                  :key="image.id"
+                >
+                  <img
+                    class="img-thumbnail shadow-sm w-100"
+                    @click="selectImage(image)"
+                    img
+                    :src="`http://localhost/easyrentnew/apinew/uploads/items/${image.name}`"
+                  />
+                  <!-- <pre>{{image}}</pre> -->
+                  <span
+                    class="badge badge-danger position-absolute"
+                    style="top: 0; right: 0"
+                    @click="removeImage(image.id)"
+                    >x</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Upload</span>
+              </div>
+              <div class="custom-file">
+                <input
+                  type="file"
+                  class="custom-file-input"
+                  id="inputGroupFile01"
+                  @change="uploadImage($event)"
+                />
+                <label class="custom-file-label" for="inputGroupFile01"
+                  >Click to select images</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group full-width">
+                <label>Description</label>
+                <textarea
+                  class="form-control"
+                  style="min-height: 200px"
+                  placeholder="This is a cannon camera"
+                  v-model="form.description"
+                ></textarea>
+                <hr class="mb-1" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Rent Type</label>
+                <select class="form-control" v-model="form.rentType">
+                  <option
+                    v-for="rentType in rentTypes"
+                    :key="rentType.rent_type_id"
+                    :value="rentType.rent_type_id"
+                  >
+                    {{ rentType.rent_type }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Rent Price</label>
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="1500"
+                  v-model="form.price"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label>Contact Number</label>
+              <div class="col-md-12">
+                <vue-fontawesome
+                  icon="mobile-phone"
+                  color="#28a745"
+                ></vue-fontawesome>
+                <div class="col-md-12 col-lg-6">0776789900</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <label>Item Owner</label>
+              <div class="form-group full-width">
+                <p>By <strong>Amal Perera</strong></p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="w-100 d-flex justify-content-end">
+                <button type="button" class="btn btn-light mr-3">Cancel</button>
+                <button type="button" class="btn btn-success" @click="publish">
+                  Publish
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+<script>
+import axios from "axios";
+export default {
+  data() {
+    return {
+      form: {
+        itemName: "",
+        description: "",
+        price: 0,
+        rentType: 1,
+        contactnumber: "",
+        isAvailable: true,
+        images: [],
+        selectedCatId: null,
+        selectedCountryId: 1,
+        selectedProvinceId: 1,
+        selectedCityId: 1,
+        selectedDistrictId: 1,
+        selectedImage: null,
+      },
+      rentTypes: [],
+      categories: [],
+      catBreadCrumb: [],
+      provinces: [],
+      districts: [],
+      cities: [],
+      categoriesList: [],
+    };
+  },
+  computed: {},
+  methods: {
+    removeImage(imageId) {
+      const filteredImages = this.form.images.filter(image => {
+        return image.id !== imageId
+      })
+      this.form.images = filteredImages;
+      if (this.form.images.length === 0) {
+        this.form.selectedImage = null;
+      }
+      if (this.form.selectedImage.id === imageId) {
+        this.form.selectedImage = null;
+        if (this.form.images.length > 0) {
+          this.form.selectedImage = this.form.images[0]
+        }
+      }
+    },
+    selectImage(image) {
+      this.form.selectedImage = image;
+    },
+    uploadImage(event) {
+      var formData = new FormData();
+      formData.append("image", event.target.files[0]);
+      axios
+        .post("/apinew/upload_image/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            if (this.form.images.length < 5) {
+              let imageObject = {
+                id: response.data.file.id,
+                name: response.data.file.name,
+              };
+              this.form.images.push(imageObject);
+              if (this.form.images.length === 1) {
+                this.selectImage(this.form.images[0]);
+              }
+            } else {
+              alert("You cannot upload more than five images");
+            }
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    basicdata() {
+      let url = "/apinew/add";
+      var form = new FormData();
+      form.append("itemName", this.itemName);
+      form.append("description", this.description);
+      form.append("price", this.price);
+      axios({
+        method: "post",
+        url: url,
+        data: form,
+      })
+        .then((response) => {
+          this.$router.push({ path: "/" });
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getRentTypes() {
+      let url = "/apinew/getRentTypes/";
+      axios({
+        method: "get",
+        url: url,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.rentTypes = response.data.rent;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getCategories(item) {
+      debugger;
+      const catId = (item && item.cat.category_id) || 0;
+      // const levelIndex = item.level;
+      const url = `/apinew/getCategories/?parent_id=${catId}`;
+      axios({
+        method: "get",
+        url: url,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            debugger;
+            this.categoriesList.push({
+              categories: response.data.categories,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    resetFields() {
+      this.$set(this.form, "description", null);
+      this.$set(this.form, "price", null);
+      this.$set(this.form, "images", []);
+      this.$set(this.form, "rentType", 1);
+      (this.selectedCatId = null),
+        // this.catBreadcrumb = []
+        this.getCategories();
+      this.getProvince();
+    },
+    getProvince() {
+      let url = "/apinew/getLocations/";
+      url = `${url}?country_id=1`;
+      axios({
+        method: "get",
+        url: url,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.provinces = response.data.states;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getDistricts() {
+      const url = `/apinew/getLocations/?province_id=${this.form.selectedProvinceId}`;
+      axios({
+        method: "get",
+        url: url,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.districts = response.data.districts;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    getCities() {
+      let url = `/apinew/getLocations/?district_id=${this.form.selectedDistrictId}`;
+      axios({
+        method: "get",
+        url: url,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.cities = response.data.cities;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    publish() {
+      let url = "/apinew/add/";
+      var form = new FormData();
+      form.append("itemname", this.form.itemName);
+      form.append("description", this.form.description);
+      form.append("price", this.form.price);
+      form.append("rent_type", this.form.rentType);
+      // form.append('contactnumber', this.form.contactnumber);
+      form.append("province_id", this.form.selectedProvinceId);
+      form.append("district_id", this.form.selectedDistrictId);
+      form.append("city_id", this.form.selectedCityId);
+      axios({
+        method: "post",
+        url: url,
+        data: form,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
+  mounted() {
+    this.getRentTypes();
+    this.getCategories();
+    this.getProvince();
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.main-image {
+  width: 100%;
+  height: 300px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+</style>

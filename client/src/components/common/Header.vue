@@ -4,7 +4,7 @@
       <div class="container">
         <router-link class="navbar-brand" to="/">EasyRent</router-link>
         <HeaderNav/>
-        <test :username="'Nimal'"/>
+        <test v-if="user" :username="user.firstname"/>
       </div>
     </nav>
   </div>
@@ -19,6 +19,11 @@ export default {
     return {
       isMenu: false,
     };
+  },
+  props: {
+    user: {
+      type: Object
+    }
   },
   components: {
     HeaderNav,
