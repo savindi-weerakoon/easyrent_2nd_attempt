@@ -1,7 +1,6 @@
 <template>
-{{user}}
-  <Header :user="user"/>
-  <router-view :user="user"/>
+  <Header :user="userObj"/>
+  <router-view :user="userObj"/>
 </template>
 
 <style lang="scss">
@@ -24,13 +23,16 @@ export default {
   components: {
     Header,
   },
-  methods: {
-    getUser() {
+  computed: {
+    userObj() {
       const user = Cookies.get('user');
       if (user) {
-        this.user = JSON.parse(user);
+        return JSON.parse(user);
       }
+      return null;
     }
+  },
+  methods: {
   },
 };
 </script>

@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <router-link class="navbar-brand" to="/">EasyRent</router-link>
-        <HeaderNav/>
+        <HeaderNav :user="user"/>
         <test v-if="user" :username="user.firstname"/>
       </div>
     </nav>

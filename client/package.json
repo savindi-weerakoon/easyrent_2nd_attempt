@@ -18,6 +18,7 @@
     "vue-chartjs": "^4.0.7",
     "vue-router": "^4.0.0-0",
     "vue-star-rating": "^2.1.0",
+    "vue-toastr": "^2.1.2",
     "vue3-datepicker": "^0.3.3"
   },
   "devDependencies": {
