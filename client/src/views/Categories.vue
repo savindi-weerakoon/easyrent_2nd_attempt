@@ -29,16 +29,13 @@ export default {
   },
   methods: {
     getCategoriesWithCount () {
-      debugger;
       let url = '/apinew/getCategoriesWithCount/'
       axios({
         method: 'get',
         url: url
       })
       .then(response => {
-        debugger;
         if (response.status === 200) {
-          debugger;
           this.categories = response.data.withCount
         }
       })

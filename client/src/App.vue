@@ -26,7 +26,7 @@ export default {
   computed: {
     userObj() {
       const user = Cookies.get('user');
-      if (user) {
+      if (user && user !== 'undefined') {
         return JSON.parse(user);
       }
       return null;

@@ -11,7 +11,7 @@
               align-items-center
             "
           >
-            <router-link class="nav-link text-secondary pl-0" to="/reports"
+            <router-link class="nav-link text-secondary pl-0" to="/dashboard/reports"
               >Reports</router-link
             >
           </li>
@@ -53,11 +53,11 @@
           >
             <router-link
               class="nav-link text-secondary pl-0"
-              to="/dashboard/payments"
-              >Payments</router-link
+              to="/dashboard/PendingPosts"
+              >Pending Posts</router-link
             >
           </li>
-          <li
+           <li
             class="
               list-group-item
               d-flex
@@ -67,8 +67,8 @@
           >
             <router-link
               class="nav-link text-secondary pl-0"
-              to="/pending-posts"
-              >Pending Posts</router-link
+              to="/dashboard/PendingPayments"
+              >Pending Payments</router-link
             >
           </li>
           <li
@@ -90,11 +90,18 @@
         </ul>
       </div>
       <div class="col-md-9">
-        <router-view />
+        <router-view :user="user"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+export default {
+props: {
+      user: {
+        type: Object
+      }
+    },
+}    
 </script>

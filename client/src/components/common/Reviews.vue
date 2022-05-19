@@ -1,7 +1,7 @@
 <template>
   <div class="reviews-container">
     <!-- <div v-if="reviews.length > 0" class="row row-post"> -->
-    <ul>
+    <ul class="pl-0">
       <li class="list-group-item bg-light mt-3 pt-2 pb-0 pl-4 pr-4" v-for="(review, index) in reviewDetails" :key="index">
         <star-rating :star-size="24"></star-rating>
         <blockquote class="blockquote">
@@ -32,18 +32,30 @@ export default {
       reviewDetails:[],
     };
   },
+  props: {
+    reviews: {
+      type: Object,
+    },
+    postId: {
+      type: Number,
+    },
+  },
   components: {
     StarRating,
   },
   methods:{
     getCategoriesView() {
-      let url = "/apinew/getReviewDetails/?post_id=1";
+      const url = "/apinew/getReviewDetails/";
+      var form = new FormData();
+      form.append("post_id", this.postId);
       axios({
-        method: "get",
+        method: "post",
         url: url,
+        data: form,
       })
         .then((response) => {
-          this.reviewDetails = response.data.postReviews;
+          if (response.status === 200) {            this.reviewDetails = response.data.postReviews;
+          }
         })
         .catch((error) => {
           console.error(error);

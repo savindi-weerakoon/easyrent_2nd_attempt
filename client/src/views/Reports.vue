@@ -128,7 +128,9 @@ export default {
     }
   },
   props: {
-    user: undefined
+    user: {
+      type: Object
+    }
   },
   components: {
     'bar-chart': barChart,
@@ -149,8 +151,8 @@ export default {
       form.append("user_id", this.user.user_id);
       axios({
         method: 'post',
-        url: process.env.VUE_APP_API + url,
-        data: form
+        url: url,
+        data: form,
       })
       .then(response => {
         if (response.status === 200) {

@@ -24,7 +24,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
   },
   {
-    path: '/postView/:post_id/:tenant_id',
+    path: '/postView/:post_id',
     name: 'PostView',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -104,18 +104,22 @@ const routes = [
         component: () => import('../views/RentedFromSomeone.vue')
       },
       {
+        path: 'PendingPosts',
+        component: () => import('../views/PendingPosts.vue')
+      },
+      {
+        path: 'PendingPayments',
+        component: () => import('../views/PendingPayments.vue')
+      },
+      {
         path: 'notifications',
         component: () => import('../views/Notifications.vue')
       },
+      {
+        path: 'reports',
+        component: () => import('../views/Reports.vue')
+      },
     ]
-  },
-  {
-    path: '/reports',
-    name: 'Reports',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Reports.vue')
   },
   {
     path: '/reviews',

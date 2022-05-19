@@ -18,7 +18,7 @@
               <div class="form-group col-md-12">
                 <label for="validationServer01 text-danger">Password </label>
                 <input
-                  type="text"
+                  type="password"
                   class="form-control"
                   placeholder="john"
                   v-model="password"
@@ -58,67 +58,75 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
-import Cookies from 'js-cookie'
+import axios from "axios";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
       isRememberMe: false,
-    }
+    };
   },
   methods: {
     loginUser() {
-      let url = '/apinew/login/'
+      let url = "/apinew/login/";
       var form = new FormData();
-      form.append('username', this.username);
-      form.append('password', this.password);
-      axios({
-          method: 'post',
+      form.append("username", this.username);
+      form.append("password", this.password);
+      debugger
+      if (this.username.trim() == "") {
+        this.$toast.error("Username is required");
+      } else if (this.password.trim() == "") {
+        this.$toast.error("Password is required");
+      } else {
+        axios({
+          method: "post",
           url: url,
           data: form,
         })
-        .then(response => {
-          this.getUserDetails(response.data.token)
-          // console.log(response)
-        })
-        .catch(error => {
-          console.error(error)
-        })
+          .then((response) => {
+            this.$toast.success("Successfully Logged In");
+            this.getUserDetails(response.data.token);
+            // console.log(response)
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
     getUserDetails(token) {
-      let url = '/apinew/getUser/'
+      let url = "/apinew/getUser/";
       var form = new FormData();
-      form.append('token', token);
+      form.append("token", token);
       axios({
-        method: 'post',
+        method: "post",
         url: url,
         data: form,
       })
-      .then(response => {
-        if (response.status === 200) {
-          debugger;
-          const userString = JSON.stringify(response.data.user)
-          if (this.isRememberMe) {
-            Cookies.set('token', token, { expires: 30 })
-            Cookies.set('user', userString, { expires: 30 })
-          } else {
-            Cookies.set('token', token)
-            Cookies.set('user', userString)
+        .then((response) => {
+          if (response.status === 200) {
+            const userString = JSON.stringify(response.data.user);
+            if (this.isRememberMe) {
+              Cookies.set("token", token, { expires: 30 });
+              Cookies.set("user", userString, { expires: 30 });
+            } else {
+              Cookies.set("token", token);
+              Cookies.set("user", userString);
+            }
+            this.$router.push({ path: "/" });
           }
-          this.$router.push({path: '/'})
-        }
-      })
-      .catch(error => {
-        console.error(error)
-      });
+        })
+        .catch((error) => {
+          console.error(error);
+          this.$toast.error("Incorrect username or password");
+        });
     },
   },
   mounted() {
     if (this.user) {
-      this.$router.push({path: '/'})
+      this.$router.push({ path: "/" });
     }
-  }
-}
+  },
+};
 </script>

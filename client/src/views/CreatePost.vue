@@ -3,6 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="row">
+          <label class="col-12">Select Category</label>
           <div
             class="form-group col-md-3 col-lg-4"
             v-for="(categoryItem, index) in categoriesList"
@@ -45,7 +46,7 @@
               </select>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-md-3 col-lg-4">
             <div v-if="districts.length > 0" class="form-group">
               <label>Select District</label>
               <select
@@ -63,7 +64,7 @@
               </select>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-md-3 col-lg-4">
             <div v-if="cities.length > 0" class="form-group">
               <label>Select City</label>
               <select class="form-control" v-model="form.selectedCityId">
@@ -74,28 +75,6 @@
             </div>
           </div>
         </div>
-        <div
-          v-if="
-            form.selectedProvinceId &&
-            form.selectedDistrictId &&
-            form.selectedCityId
-          "
-        >
-          <div class="row">
-            <div class="col-12">
-              <div class="form-group full-width">
-                <label>Item Name </label>
-                <input
-                  class="form-control"
-                  placeholder="Canon 123"
-                  v-model="form.itemName"
-                />
-              </div>
-            </div>
-          </div>
-          <hr class="mb-1" />
-        </div>
-
         <div
           v-if="
             form.selectedProvinceId &&
@@ -223,7 +202,7 @@
             <div class="col-md-12">
               <label>Item Owner</label>
               <div class="form-group full-width">
-                <p>By <strong>Amal Perera</strong></p>
+                <p>By <strong>{{user.firstname}} {{user.lastname}}</strong></p>
               </div>
             </div>
           </div>
@@ -250,16 +229,16 @@ export default {
       form: {
         itemName: "",
         description: "",
-        price: 0,
-        rentType: 1,
+        price: null,
+        rentType: null,
         contactnumber: "",
         isAvailable: true,
         images: [],
         selectedCatId: null,
-        selectedCountryId: 1,
-        selectedProvinceId: 1,
-        selectedCityId: 1,
-        selectedDistrictId: 1,
+        selectedCountryId: null,
+        selectedProvinceId: null,
+        selectedCityId: null,
+        selectedDistrictId: null,
         selectedImage: null,
       },
       rentTypes: [],
@@ -270,6 +249,11 @@ export default {
       cities: [],
       categoriesList: [],
     };
+  },
+  props: {
+    user: {
+      type: Object
+    }
   },
   computed: {},
   methods: {
@@ -355,9 +339,7 @@ export default {
         });
     },
     getCategories(item) {
-      debugger;
       const catId = (item && item.cat.category_id) || 0;
-      // const levelIndex = item.level;
       const url = `/apinew/getCategories/?parent_id=${catId}`;
       axios({
         method: "get",
@@ -365,7 +347,6 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            debugger;
             this.categoriesList.push({
               categories: response.data.categories,
             });
@@ -434,20 +415,38 @@ export default {
     publish() {
       let url = "/apinew/add/";
       var form = new FormData();
+      form.append("user_id", this.user.user_id);
       form.append("itemname", this.form.itemName);
       form.append("description", this.form.description);
       form.append("price", this.form.price);
       form.append("rent_type", this.form.rentType);
-      // form.append('contactnumber', this.form.contactnumber);
       form.append("province_id", this.form.selectedProvinceId);
       form.append("district_id", this.form.selectedDistrictId);
       form.append("city_id", this.form.selectedCityId);
+      form.append('category_id', this.form.selectedCatId.cat.category_id);
+      form.append("image_ids", JSON.stringify(this.form.images));
       axios({
         method: "post",
         url: url,
         data: form,
       })
         .then((response) => {
+          this.form = {
+            itemName: "",
+            description: "",
+            price: null,
+            rentType: null,
+            contactnumber: "",
+            isAvailable: true,
+            images: [],
+            selectedCatId: null,
+            selectedCountryId: null,
+            selectedProvinceId: null,
+            selectedCityId: null,
+            selectedDistrictId: null,
+            selectedImage: null,
+          }
+          this.$toast.success('You have successfully published a post')
           console.log(response);
         })
         .catch((error) => {

@@ -3,8 +3,21 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <router-link class="navbar-brand" to="/">EasyRent</router-link>
-        <HeaderNav :user="user"/>
-        <test v-if="user" :username="user.firstname"/>
+        <HeaderNav :user="user" />
+        <ul v-if="user" class="navbar-nav">
+          <li class="nav-item">
+            <router-link class="btn btn-outline-success" to="/createPost">Add Your Advert</router-link>
+          </li>
+          <li class="nav-item ml-3">
+            <a class="nav-link" type="button" @click="logout"><small>Logout</small></a>
+          </li>
+        </ul>
+        <ul v-else class="navbar-nav">
+          <li class="nav-item active">
+            <router-link class="btn btn-success" to="/login">Login</router-link>
+          </li>
+        </ul>
+        <!-- <test v-if="user" :username="user.firstname"/> -->
       </div>
     </nav>
   </div>
@@ -12,7 +25,7 @@
 
 <script>
 import HeaderNav from "@/components/common/HeaderNav.vue";
-import test from '@/components/common/test.vue'
+import Cookies from "js-cookie";
 export default {
   name: "Header",
   data() {
@@ -22,12 +35,18 @@ export default {
   },
   props: {
     user: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   components: {
     HeaderNav,
-    test
   },
+  methods: {
+    logout() {
+      Cookies.remove("token");
+      Cookies.remove("user");
+      this.$router.push({path: '/'})
+    }
+  }
 };
 </script>

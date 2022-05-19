@@ -14,7 +14,6 @@
                 class="form-control"
                 placeholder="Search item name"
                 v-model="filters.searchKeyword"
-                @keyup.enter="applyFilters"
               />
             </div>
             <div class="form-group mb-3 mt-4">
@@ -48,6 +47,7 @@
             </div>
             <div class="form-group">
               <star-rating
+                :read-only="true"
                 :star-size="24"
                 v-model:rating="rating"
               ></star-rating>
@@ -77,17 +77,16 @@
             </div>
             <button class="btn btn-dark mt-3 col-md-12" @click="resetFields">Clear Filter</button>
             <br />
-            <button class="btn btn-success mt-4 col-md-12" @click="applyFilters">Apply Filter</button>
+            <button class="btn btn-success mt-4 col-md-12" @click="filterPosts">Apply Filter</button>
           </div>
         </div>
       </div>
-      <div class="ml-4">
-        <Post />
-        {{ filters.categoryId }}
-        {{ filters.min_price }}
-        {{ filters.max_price }}
-        {{  rating }}
-        {{ filters.searchKeyword }}
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-3" v-for="post in posts" :key="post.post_id">
+            <Post :post="post"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -103,14 +102,15 @@ export default {
     return {
       isMenu: false,
       filters: {
-        categoryId: '',
-        min: 2,
-        max: 300,
+        categoryId: null,
+        min: null,
+        max: null,
         // rating: 5,
-        searchKeyword: "",
+        searchKeyword: null,
       },
       categories:[],
       rating: null,
+      posts: [],
     };
   },
   components: {
@@ -134,34 +134,42 @@ export default {
       })
     },
     resetFields() {
-      this.filters.categoryId= null;
-      this.filters.min=null;
-      this.filters.max=null;
+      this.filters.categoryId = null;
+      this.filters.min = null;
+      this.filters.max = null;
       this.rating = null;
-      this.filters.searchKeyword=null;
+      this.filters.searchKeyword = null;
+      this.filterPosts();
     },
     filterPosts() {
       let url = "/apinew/getPostsByCategoryFiltered/";
       var form = new FormData();
-      form.append("category_id", this.filters.categoryId);
-      form.append("min", this.filters.min);
-      form.append("max", this.filters.min);
-      form.append("rating", this.rating);
-      form.append("keyword", this.filters.searchKeyword);
+      if (this.filters.categoryId) {
+        form.append("category_id", this.filters.categoryId);
+      }
+      if (this.filters.min) {
+        form.append("min", this.filters.min);
+      }
+      if (this.filters.max) {
+        form.append("max", this.filters.max);
+      }
+      if (this.rating) {
+        form.append("rating", this.rating);
+      }
+      if (this.filters.searchKeyword) {
+        form.append("keyword", this.filters.searchKeyword);
+      }
       axios({
         method: "post",
         url: url,
         data: form,
       })
         .then((response) => {
-          console.log(response);
+          this.posts = response.data.posts;
         })
         .catch((error) => {
           console.error(error);
         });
-    },
-    applyFilters() {
-      this.filterPosts();
     },
   },
   mounted() {
