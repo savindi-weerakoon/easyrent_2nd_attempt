@@ -86,12 +86,11 @@ export default {
           data: form,
         })
           .then((response) => {
-            this.$toast.success("Successfully Logged In");
             this.getUserDetails(response.data.token);
-            // console.log(response)
+            this.$toast.success(response.data.message);
           })
           .catch((error) => {
-            console.error(error);
+            this.$toast.error(error.response.data.message);
           });
       }
     },
@@ -114,7 +113,11 @@ export default {
               Cookies.set("token", token);
               Cookies.set("user", userString);
             }
+            debugger;
             this.$router.push({ path: "/" });
+            setTimeout(() => {
+              document.location.reload(true);
+            }, 1000);
           }
         })
         .catch((error) => {

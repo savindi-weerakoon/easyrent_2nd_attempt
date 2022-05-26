@@ -1,10 +1,15 @@
 <template>
   <div class="container pt-5">
     <div class="categories">
-      <h4><pre>{{posts.category_name}}</pre></h4>
       <div v-if="posts.length > 0" class="row">
         <div class="col-md-3 mb-4" v-for="post in posts" :key="post.post_id">
-          <Post :post="post"/>
+          <Post :post="post"> 
+            <div class="row">
+              <div class="col-12 ml-3">
+            {{post.category_name}} 
+            </div>
+            </div>
+          </Post>
         </div>
       </div>
       <div v-else class="row">

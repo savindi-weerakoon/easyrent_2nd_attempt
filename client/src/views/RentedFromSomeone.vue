@@ -1,7 +1,7 @@
 <template>
-  <div class="container pt-5">
+  <div>
     <div class="row">
-      <h3>Items rented from someone</h3>
+      <h5>Items rented from someone</h5>
     </div>
     <div class="row">
       <div v-if="rents.length > 0" class="row row-post">

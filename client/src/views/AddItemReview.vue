@@ -28,14 +28,14 @@
                   >{{ suggetion }}</span
                 > -->
               </div>
-              <textarea class="form-control" id="desc" rows="4" v-model="review">this is ttt</textarea>
+              <textarea class="form-control" id="desc" rows="4" v-model="review">this is it</textarea>
             </div>
           </form>
           <div class="w-100 d-flex justify-content-end mt-3">
             <button class="btn btn-m mr-3" type="reset">
               <i class="glyphicon glyphicon-repeat"></i> Dismiss
             </button>
-            <button class="btn btn-m btn-success ml-5" type="submit" @click="submitReview">
+            <button class="btn btn-m btn-success ml-5" type="submit" @click.once="itemReview">
               <i class="glyphicon glyphicon-ok-sign"></i> Submit
             </button>
           </div>
@@ -52,24 +52,33 @@ export default {
   name: "add-review",
   data() {
     return {
-      rating: 1,
+      rating: 5,
       review: '',
     }
   },
   components: {
     StarRating,
   },
+  props: {
+    user: {
+      type: Object,
+    },
+  },
   computed: {
     postId () {
       return parseInt(this.$route.params.post_id)
+    },
+    reserveId () {
+      return parseInt(this.$route.params.reservation_id)
     }
   },
   methods:{
     itemReview() {
       let url = '/apinew/reviewPost/'
       var form = new FormData();
+      form.append("reservation_id", this.reserveId);
       form.append("post_id", this.postId);
-      // take user as a prop to get reviewer_id
+      form.append("user_id", this.user.user_id);
       form.append("rate", this.rating);
       form.append("review", this.review);
       axios({
@@ -78,19 +87,14 @@ export default {
         data: form,
       })
         .then((response) => {
+          this.$toast.success('You have successfully rated the item');
+          this.$router.push({ path: "/" });
           console.log(response);
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    submitReview() {
-      this.itemReview();
-    },
   },
-  mounted(){
-    this.itemReview()
-    this.submitReview()
-  }
 };
 </script>

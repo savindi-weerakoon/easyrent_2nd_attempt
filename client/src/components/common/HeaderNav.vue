@@ -1,5 +1,5 @@
 <template>
-  <ul class="navbar-nav mr-auto">
+  <ul class="navbar-nav mr-auto" style="flex-direction: row;">
     <li class="nav-item">
       <router-link class="nav-link" active-class="active" to="/">Home</router-link>
     </li>
@@ -7,7 +7,7 @@
       <router-link class="nav-link" active-class="active" to="/viewPosts">Shop</router-link>
     </li>
     <li v-if="user" class="nav-item">
-      <router-link class="nav-link" active-class="active" to="/dashboard">Dashboard</router-link>
+      <router-link class="nav-link" active-class="active" to="/dashboard/reports">Dashboard</router-link>
     </li>
     <li v-if="user" class="nav-item active">
       <router-link class="nav-link" active-class="active" to="/profile">Profile</router-link>

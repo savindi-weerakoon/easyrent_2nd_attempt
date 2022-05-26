@@ -92,7 +92,7 @@
                   >
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   class="form-control"
                   placeholder="john.doe"
                   v-model="password"
@@ -105,7 +105,7 @@
                   >
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   class="form-control"
                   placeholder="john.doe"
                   v-model="confirm_password"

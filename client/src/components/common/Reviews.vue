@@ -3,7 +3,7 @@
     <!-- <div v-if="reviews.length > 0" class="row row-post"> -->
     <ul class="pl-0">
       <li class="list-group-item bg-light mt-3 pt-2 pb-0 pl-4 pr-4" v-for="(review, index) in reviewDetails" :key="index">
-        <star-rating :star-size="24"></star-rating>
+        <star-rating :star-size="24" :show-rating="false" :read-only="true"></star-rating>
         <blockquote class="blockquote">
           <p class="mb-0"><small>{{review.review}}</small></p>
           <footer class="blockquote-footer mt-2"><small>{{review.firstname}} {{review.lastname}}</small></footer>
@@ -54,7 +54,8 @@ export default {
         data: form,
       })
         .then((response) => {
-          if (response.status === 200) {            this.reviewDetails = response.data.postReviews;
+          if (response.status === 200) {            
+            this.reviewDetails = response.data.postReviews;
           }
         })
         .catch((error) => {

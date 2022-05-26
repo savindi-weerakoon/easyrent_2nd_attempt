@@ -1,0 +1,14 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-default {
+  cursor: default;
+}
+
+.page {
+  min-height: calc(100vh - 88px);
+}
+
+.modal {
+  background-color: rgba(0,0,0,0.4);
+}

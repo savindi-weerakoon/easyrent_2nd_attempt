@@ -1,5 +1,5 @@
 <template>
-  <div class="Header">
+  <div class="header shadow">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <router-link class="navbar-brand" to="/">EasyRent</router-link>
@@ -45,8 +45,20 @@ export default {
     logout() {
       Cookies.remove("token");
       Cookies.remove("user");
-      this.$router.push({path: '/'})
+      this.$router.push({ path: "/" });
+      setTimeout(() => {
+        document.location.reload(true);
+      }, 1000);
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+</style>

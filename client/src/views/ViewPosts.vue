@@ -1,10 +1,10 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-2">
+  <div class="container-fluid pt-2">
+    <div class="row mt-4">
+      <div class="col-lg-2 col-md-4">
         <div class="row">
-          <div class="col-md-12 ml-3">
-            <div class="mt-4 mb-4">
+          <div class="shadow-sm col-md-12 ml-3 py-3">
+            <div>
               <h5>Apply Filters</h5>
             </div>
             <div class="form-group mb-3">
@@ -47,7 +47,6 @@
             </div>
             <div class="form-group">
               <star-rating
-                :read-only="true"
                 :star-size="24"
                 v-model:rating="rating"
               ></star-rating>
@@ -81,9 +80,9 @@
           </div>
         </div>
       </div>
-      <div class="col-md-10">
+      <div class="col-lg-10 col-md-8 pl-4">
         <div class="row">
-          <div class="col-md-3" v-for="post in posts" :key="post.post_id">
+          <div class="col-lg-3 col-md-6" v-for="post in posts" :key="post.post_id">
             <Post :post="post"/>
           </div>
         </div>

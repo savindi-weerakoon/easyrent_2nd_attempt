@@ -5,13 +5,14 @@
         <div class="row">
           <label class="col-12">Select Category</label>
           <div
-            class="form-group col-md-3 col-lg-4"
-            v-for="(categoryItem, index) in categoriesList"
-            :key="index"
+            class="form-group col-lg-4 col-md-6"
+            v-for="(categoryItem, level) in categoriesList"
+            :key="level"
           >
             <select
-              @change="getCategories(form.selectedCatId)"
-              v-model="form.selectedCatId"
+              v-if="categoryItem.categories.length > 0"
+              @change="getCategories(categoryItem.categories.selectedCatId, level)"
+              v-model="categoryItem.categories.selectedCatId"
               class="form-control"
             >
               <option
@@ -19,7 +20,7 @@
                 :key="category.category_id"
                 :value="{
                   cat: category,
-                  level: index,
+                  level: level,
                 }"
               >
                 {{ category.category_name }}
@@ -28,7 +29,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3 col-lg-4">
+          <div class="col-lg-4 col-md-6">
             <div class="form-group">
               <label>Select Province</label>
               <select
@@ -76,11 +77,7 @@
           </div>
         </div>
         <div
-          v-if="
-            form.selectedProvinceId &&
-            form.selectedDistrictId &&
-            form.selectedCityId
-          "
+          v-if="isEndCategory && form.selectedCityId"
         >
           <div class="row">
             <div class="col-12">
@@ -98,11 +95,10 @@
           <div class="row">
             <div class="col-12">
               <div class="w-100 form-group">
-                  <div
-                    v-if="form.selectedImage"
-                    class="shadow-sm main-image"
-                    :style="`background-image: url(http://localhost/easyrentnew/apinew/uploads/items/${form.selectedImage.name})`"
-                  ></div>
+                <div
+                  class="shadow-sm main-image"
+                  :style="form.selectedImage ? `background-image: url(http://localhost/easyrentnew/apinew/uploads/items/${form.selectedImage.name})` : `background-image: url(${require('./../assets/images/No_Image_Available.jpg')})`"
+                ></div>
               </div>
               <div class="row mb-3">
                 <div
@@ -111,14 +107,14 @@
                   :key="image.id"
                 >
                   <img
-                    class="img-thumbnail shadow-sm w-100"
+                    class="img-thumbnail shadow-sm w-100 cursor-pointer"
                     @click="selectImage(image)"
                     img
                     :src="`http://localhost/easyrentnew/apinew/uploads/items/${image.name}`"
                   />
                   <!-- <pre>{{image}}</pre> -->
                   <span
-                    class="badge badge-danger position-absolute"
+                    class="badge badge-danger position-absolute cursor-pointer"
                     style="top: 0; right: 0"
                     @click="removeImage(image.id)"
                     >x</span
@@ -160,7 +156,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <label>Rent Type</label>
                 <select class="form-control" v-model="form.rentType">
@@ -173,7 +169,7 @@
                   </option>
                 </select>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-6">
               <div class="form-group">
                 <label>Rent Price</label>
@@ -202,7 +198,9 @@
             <div class="col-md-12">
               <label>Item Owner</label>
               <div class="form-group full-width">
-                <p>By <strong>{{user.firstname}} {{user.lastname}}</strong></p>
+                <p>
+                  By <strong>{{ user.firstname }} {{ user.lastname }}</strong>
+                </p>
               </div>
             </div>
           </div>
@@ -230,7 +228,7 @@ export default {
         itemName: "",
         description: "",
         price: null,
-        rentType: null,
+        // rentType: null,
         contactnumber: "",
         isAvailable: true,
         images: [],
@@ -248,19 +246,20 @@ export default {
       districts: [],
       cities: [],
       categoriesList: [],
+      isEndCategory: false,
     };
   },
   props: {
     user: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   computed: {},
   methods: {
     removeImage(imageId) {
-      const filteredImages = this.form.images.filter(image => {
-        return image.id !== imageId
-      })
+      const filteredImages = this.form.images.filter((image) => {
+        return image.id !== imageId;
+      });
       this.form.images = filteredImages;
       if (this.form.images.length === 0) {
         this.form.selectedImage = null;
@@ -268,7 +267,7 @@ export default {
       if (this.form.selectedImage.id === imageId) {
         this.form.selectedImage = null;
         if (this.form.images.length > 0) {
-          this.form.selectedImage = this.form.images[0]
+          this.form.selectedImage = this.form.images[0];
         }
       }
     },
@@ -338,7 +337,7 @@ export default {
           console.error(error);
         });
     },
-    getCategories(item) {
+    getCategories(item, updatedLevel) {
       const catId = (item && item.cat.category_id) || 0;
       const url = `/apinew/getCategories/?parent_id=${catId}`;
       axios({
@@ -347,9 +346,26 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            this.categoriesList.push({
-              categories: response.data.categories,
-            });
+            if (updatedLevel > -1) {
+              this.categoriesList = this.categoriesList.filter((cat) => {
+                return !(cat.level > updatedLevel);
+              });
+              console.log(this.categoriesList, updatedLevel);
+            }
+            if (
+              response.data.categories &&
+              response.data.categories.length > 0
+            ) {
+              let level = this.categoriesList.length;
+              this.categoriesList.push({
+                level: level,
+                categories: response.data.categories,
+              });
+              this.isEndCategory = false;
+            } else {
+              this.isEndCategory = true;
+              this.form.selectedCatId = item;
+            }
           }
         })
         .catch((error) => {
@@ -360,7 +376,7 @@ export default {
       this.$set(this.form, "description", null);
       this.$set(this.form, "price", null);
       this.$set(this.form, "images", []);
-      this.$set(this.form, "rentType", 1);
+      // this.$set(this.form, "rentType", 1);
       (this.selectedCatId = null),
         // this.catBreadcrumb = []
         this.getCategories();
@@ -390,6 +406,10 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
+            this.form.selectedDistrictId = null;
+            this.districts = [];
+            this.form.selectedCityId = null;
+            this.cities = [];
             this.districts = response.data.districts;
           }
         })
@@ -405,6 +425,7 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
+            this.form.selectedCityId = null;
             this.cities = response.data.cities;
           }
         })
@@ -419,12 +440,19 @@ export default {
       form.append("itemname", this.form.itemName);
       form.append("description", this.form.description);
       form.append("price", this.form.price);
-      form.append("rent_type", this.form.rentType);
+      // form.append("rent_type", this.form.rentType);
       form.append("province_id", this.form.selectedProvinceId);
       form.append("district_id", this.form.selectedDistrictId);
       form.append("city_id", this.form.selectedCityId);
-      form.append('category_id', this.form.selectedCatId.cat.category_id);
+      form.append("category_id", this.form.selectedCatId.cat.category_id);
       form.append("image_ids", JSON.stringify(this.form.images));
+      if (this.form.itemName.trim() === '') {
+        this.$toast.error('You cannot keep item name empty');
+      } else if (parseInt(this.form.price) === 0 ) {
+        this.$toast.error('You cannot keep rent price zero');
+      } else if (this.form.price.trim() === '') {
+        this.$toast.error('You cannot keep rent price empty');  
+      } else {
       axios({
         method: "post",
         url: url,
@@ -435,7 +463,7 @@ export default {
             itemName: "",
             description: "",
             price: null,
-            rentType: null,
+            // rentType: null,
             contactnumber: "",
             isAvailable: true,
             images: [],
@@ -445,13 +473,14 @@ export default {
             selectedCityId: null,
             selectedDistrictId: null,
             selectedImage: null,
-          }
-          this.$toast.success('You have successfully published a post')
+          };
+          this.$toast.success("You have successfully published a post");
           console.log(response);
         })
         .catch((error) => {
           console.error(error);
         });
+      }
     },
   },
   mounted() {

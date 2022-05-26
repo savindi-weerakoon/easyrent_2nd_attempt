@@ -84,7 +84,6 @@
               to="/dashboard/Notifications"
             >
               Notifications
-              <span class="badge badge-primary badge-pill">1</span>
             </router-link>
           </li>
         </ul>

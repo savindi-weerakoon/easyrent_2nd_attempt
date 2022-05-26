@@ -3,7 +3,7 @@
     <div class="profile">
       <div class="row">
         <div class="col-6 col-lg-3 col-sm-3 mb-3">
-          <img :src="profile && profile.profile_image ? `http://localhost/easyrentnew/apinew/uploads/profile/${user.profile_image}` : require('./../assets/images/avatar.png')" class="card-img-top">
+          <img :src="profile && profile.image_name ? `http://localhost/easyrentnew/apinew/uploads/profile/${profile.image_name}` : require('./../assets/images/avatar.png')" class="card-img-top">
           <div class="custom-file">
           <input type="file" class="custom-file-input" id="inputGroupFile01" @change="uploadProfile($event)" accept=".jpg, .jpeg, .png">
           <label class="custom-file-label" for="inputGroupFile01">Click to select profile picture</label>
@@ -66,33 +66,41 @@
 
 <script>
 import axios from "axios";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
       profile: null,
     }
   },
-  props: {
-    user: {
-      type: Object,
-    }
-  },
   methods: {
     updateUser() {
       let url = "/apinew/updateUser/";
       var form = new FormData();
+      debugger;
       form.append("image_id", this.profile.image_id);
+      form.append("user_id", this.profile.user_id);
       form.append("firstname", this.profile.firstname);
       form.append("lastname", this.profile.lastname);
       form.append("username", this.profile.username);
       form.append("email", this.profile.email);
-      form.append("contact_number", this.profile.contactnumber);
+      form.append("contact_number", this.profile.phone);
+      if (this.profile.firstname === null || this.profile.firstname.trim() === '') {
+        this.$toast.error('You cannot keep firstname empty');
+      } else if (this.profile.lastname === null || this.profile.lastname.trim() === '') {
+        this.$toast.error('You cannot keep lastname empty');
+      } else if (this.profile.email === null || this.profile.email.trim() === '') {
+        this.$toast.error('You cannot keep email empty');
+      // } else if (this.user.contact_numbers === null || this.user.contact_numbers.trim() === '') {
+      //   alert('You cannot keep contact numbers empty');
+      } else {
       axios({
         method: "post",
         url: url,
         data: form,
       })
         .then((response) => {
+          debugger
           this.$toast.success('You have successfully updated your profile')
           this.$router.push({ path: "/" });
           console.log(response);
@@ -100,6 +108,7 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+      }
     },
     uploadProfile(event) {
       var formData = new FormData();
@@ -112,9 +121,9 @@ export default {
         })
         .then((response) => {
           if (response.status === 200) {
-            // this.user['profile_image'] = response.data.data.name
-            // this.user['profile_image'] = response.data.data.name
-            this.image_id = response.data.data.id;
+            debugger;
+            this.profile.image_id = response.data.data.id;
+            this.profile.image_name = response.data.data.name;
           }
         })
         .catch((error) => {
@@ -122,9 +131,11 @@ export default {
         });
     },
     getProfile() {
-      const url = "/apinew/getProfile/";
+      const url = "/apinew/getUser/";
       var form = new FormData();
-      form.append("user_id", this.user.user_id);
+      debugger;
+      const token = Cookies.get("token");
+      form.append("token", token);
       axios({
         method: "post",
         url: url,
@@ -132,8 +143,7 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            debugger
-            this.profile = response.data.profile;
+            this.profile = response.data.user;
           }
         })
         .catch((error) => {
@@ -141,7 +151,7 @@ export default {
         });
     },
   },
-    mounted() {
+  mounted() {
     this.getProfile();
   },
 }
