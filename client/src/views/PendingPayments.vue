@@ -187,13 +187,13 @@
               </div>
               <div
                 v-else-if="
-                  notification.is_renter == false &&
+                  notification.is_renter == true &&
                   notification.reservation_state == 4
                 "
               >
                 <p>
                   Now you can express your experience about the tenant. Rate and
-                  review the owner
+                  review the customer
                 </p>
                 <router-link
                   class="btn px-4 btn-outline-success mb-4"
@@ -203,7 +203,7 @@
               </div>
               <div
                 v-else-if="
-                  notification.is_renter == true &&
+                  notification.is_renter == false &&
                   notification.reservation_state == 4
                 "
               >
@@ -213,7 +213,7 @@
                 </p>
                 <router-link
                   class="btn px-4 btn-outline-success mb-4"
-                  :to="`/addItemReview/${notification.post_id}/${notification.id}`"
+                  :to="`/addItemReview/${notification.post_id}/${notification.id}/${notification.tenant_id}`"
                   >Rate and Review
                 </router-link>
               </div>

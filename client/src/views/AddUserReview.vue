@@ -7,7 +7,7 @@
         </div>
         <div class="col-12 mt-4">
           <div class="row">
-            <h5 class="mb-2 ml-3 text-center">Amal</h5>
+            <h5 class="mb-2 ml-3 text-center">Customer</h5>
           </div>
           <!-- <div class="col-md-12 mt-2 mb-3"> -->
           <h7 class="mt-3">Tab a star to rate</h7>

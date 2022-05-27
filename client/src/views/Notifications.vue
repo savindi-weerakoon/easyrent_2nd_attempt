@@ -192,7 +192,6 @@ export default {
     getNotifications() {
       const url = "/apinew/getNotifications/";
       var form = new FormData();
-      debugger;
       form.append("user_id", this.user.user_id);
       axios({
         method: "post",
@@ -211,7 +210,6 @@ export default {
     getRejected() {
       const url = "/apinew/getRejectedPostNotifications/";
       var form = new FormData();
-      debugger;
       form.append("user_id", this.user.user_id);
       axios({
         method: "post",
@@ -220,7 +218,6 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            debugger;
             this.rejects = response.data.rejects;
           }
         })

@@ -77,7 +77,6 @@ export default {
     updateUser() {
       let url = "/apinew/updateUser/";
       var form = new FormData();
-      debugger;
       form.append("image_id", this.profile.image_id);
       form.append("user_id", this.profile.user_id);
       form.append("firstname", this.profile.firstname);
@@ -100,7 +99,6 @@ export default {
         data: form,
       })
         .then((response) => {
-          debugger
           this.$toast.success('You have successfully updated your profile')
           this.$router.push({ path: "/" });
           console.log(response);
@@ -121,7 +119,6 @@ export default {
         })
         .then((response) => {
           if (response.status === 200) {
-            debugger;
             this.profile.image_id = response.data.data.id;
             this.profile.image_name = response.data.data.name;
           }
@@ -133,7 +130,6 @@ export default {
     getProfile() {
       const url = "/apinew/getUser/";
       var form = new FormData();
-      debugger;
       const token = Cookies.get("token");
       form.append("token", token);
       axios({

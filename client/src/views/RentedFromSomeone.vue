@@ -40,7 +40,6 @@ export default {
     getRentedbyMe() {
       const url = "/apinew/report_rentedbysomeone/";
       var form = new FormData();
-      debugger;
       form.append("tenant_id", this.user.user_id);
       axios({
         method: "post",

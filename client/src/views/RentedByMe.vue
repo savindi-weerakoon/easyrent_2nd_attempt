@@ -5,7 +5,7 @@
     </div>
     <div class="row">
       <div v-if="rents.length > 0" class="row row-post">
-        <div class="col-md-4" v-for="rent in rents" :key="rent.id">
+        <div class="col-md-6" v-for="rent in rents" :key="rent.id">
           <Post :post="rent">
             <div class="card-body">
               <div class="row">

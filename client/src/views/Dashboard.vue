@@ -86,6 +86,20 @@
               Notifications
             </router-link>
           </li>
+          <!-- <li
+            class="
+              list-group-item
+              d-flex
+              justify-content-between
+              align-items-center
+            "
+          >
+            <router-link
+              class="nav-link text-secondary pl-0"
+              to="/dashboard/TestingGetAllLocations"
+              >All Provinces</router-link
+            >
+          </li> -->
         </ul>
       </div>
       <div class="col-md-9">

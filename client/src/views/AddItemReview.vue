@@ -6,9 +6,9 @@
           <h3>Rate the item</h3>
         </div>
         <div class="col-12 mt-4">
-          <div class="row">
+          <!-- <div class="row">
             <h5 class="mb-2 ml-3 text-center">Camera</h5>
-          </div>
+          </div> -->
           <!-- <div class="col-md-12 mt-2 mb-3"> -->
           <h7 class="mt-3">Tab a star to rate</h7>
           <!-- </div> -->
@@ -35,7 +35,7 @@
             <button class="btn btn-m mr-3" type="reset">
               <i class="glyphicon glyphicon-repeat"></i> Dismiss
             </button>
-            <button class="btn btn-m btn-success ml-5" type="submit" @click.once="itemReview">
+            <button class="btn btn-m btn-success ml-5" type="submit" @click="itemReview">
               <i class="glyphicon glyphicon-ok-sign"></i> Submit
             </button>
           </div>
@@ -68,6 +68,9 @@ export default {
     postId () {
       return parseInt(this.$route.params.post_id)
     },
+    tenantId () {
+      return parseInt(this.$route.params.tenant_id)
+    },
     reserveId () {
       return parseInt(this.$route.params.reservation_id)
     }
@@ -95,6 +98,27 @@ export default {
           console.error(error);
         });
     },
+    getTenantDetails() {
+      const url = "/apinew/getTenantDetails/";
+      var form = new FormData();
+      form.append("tenant_id", this.tenantId);
+      axios({
+        method: "post",
+        url: url,
+        data: form,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.posts = response.data.posts;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
+    mounted() {
+    this.getTenantDetails();
   },
 };
 </script>

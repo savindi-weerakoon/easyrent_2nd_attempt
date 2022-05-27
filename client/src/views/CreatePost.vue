@@ -11,7 +11,9 @@
           >
             <select
               v-if="categoryItem.categories.length > 0"
-              @change="getCategories(categoryItem.categories.selectedCatId, level)"
+              @change="
+                getCategories(categoryItem.categories.selectedCatId, level)
+              "
               v-model="categoryItem.categories.selectedCatId"
               class="form-control"
             >
@@ -47,7 +49,7 @@
               </select>
             </div>
           </div>
-          <div class="col-md-3 col-lg-4">
+          <div class="col-lg-4 col-md-6">
             <div v-if="districts.length > 0" class="form-group">
               <label>Select District</label>
               <select
@@ -65,7 +67,7 @@
               </select>
             </div>
           </div>
-          <div class="col-md-3 col-lg-4">
+          <div class="col-lg-4 col-md-6">
             <div v-if="cities.length > 0" class="form-group">
               <label>Select City</label>
               <select class="form-control" v-model="form.selectedCityId">
@@ -76,9 +78,7 @@
             </div>
           </div>
         </div>
-        <div
-          v-if="isEndCategory && form.selectedCityId"
-        >
+        <div v-if="isEndCategory && form.selectedCityId">
           <div class="row">
             <div class="col-12">
               <div class="form-group full-width">
@@ -97,7 +97,11 @@
               <div class="w-100 form-group">
                 <div
                   class="shadow-sm main-image"
-                  :style="form.selectedImage ? `background-image: url(http://localhost/easyrentnew/apinew/uploads/items/${form.selectedImage.name})` : `background-image: url(${require('./../assets/images/No_Image_Available.jpg')})`"
+                  :style="
+                    form.selectedImage
+                      ? `background-image: url(http://localhost/easyrentnew/apinew/uploads/items/${form.selectedImage.name})`
+                      : `background-image: url(${require('./../assets/images/No_Image_Available.jpg')})`
+                  "
                 ></div>
               </div>
               <div class="row mb-3">
@@ -373,13 +377,29 @@ export default {
         });
     },
     resetFields() {
-      this.$set(this.form, "description", null);
-      this.$set(this.form, "price", null);
-      this.$set(this.form, "images", []);
-      // this.$set(this.form, "rentType", 1);
-      (this.selectedCatId = null),
-        // this.catBreadcrumb = []
-        this.getCategories();
+      this.form = {
+        itemName: "",
+        description: "",
+        price: null,
+        // rentType: null,
+        contactnumber: "",
+        isAvailable: true,
+        images: [],
+        selectedCatId: null,
+        selectedCountryId: null,
+        selectedProvinceId: null,
+        selectedCityId: null,
+        selectedDistrictId: null,
+        selectedImage: null,
+      };
+      this.categoriesList.forEach((item) => {
+        if (item.categories) {
+          item.categories.map((cat) => {
+            cat.selectedCatId = null;
+          });
+        }
+      });
+      this.getCategories();
       this.getProvince();
     },
     getProvince() {
@@ -446,40 +466,26 @@ export default {
       form.append("city_id", this.form.selectedCityId);
       form.append("category_id", this.form.selectedCatId.cat.category_id);
       form.append("image_ids", JSON.stringify(this.form.images));
-      if (this.form.itemName.trim() === '') {
-        this.$toast.error('You cannot keep item name empty');
-      } else if (parseInt(this.form.price) === 0 ) {
-        this.$toast.error('You cannot keep rent price zero');
-      } else if (this.form.price.trim() === '') {
-        this.$toast.error('You cannot keep rent price empty');  
+      if (this.form.itemName.trim() === "") {
+        this.$toast.error("You cannot keep item name empty");
+      } else if (parseInt(this.form.price) === 0) {
+        this.$toast.error("You cannot keep rent price zero");
+      } else if (this.form.price === null || this.form.price === "") {
+        this.$toast.error("You cannot keep rent price empty");
       } else {
-      axios({
-        method: "post",
-        url: url,
-        data: form,
-      })
-        .then((response) => {
-          this.form = {
-            itemName: "",
-            description: "",
-            price: null,
-            // rentType: null,
-            contactnumber: "",
-            isAvailable: true,
-            images: [],
-            selectedCatId: null,
-            selectedCountryId: null,
-            selectedProvinceId: null,
-            selectedCityId: null,
-            selectedDistrictId: null,
-            selectedImage: null,
-          };
-          this.$toast.success("You have successfully published a post");
-          console.log(response);
+        axios({
+          method: "post",
+          url: url,
+          data: form,
         })
-        .catch((error) => {
-          console.error(error);
-        });
+          .then((response) => {
+            this.resetFields();
+            this.$toast.success("You have successfully published a post");
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     },
   },

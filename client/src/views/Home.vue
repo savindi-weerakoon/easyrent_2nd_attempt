@@ -109,7 +109,6 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            debugger;
             this.rated = response.data.rated;
           }
         })

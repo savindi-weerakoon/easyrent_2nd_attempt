@@ -113,14 +113,12 @@ export default {
   },
   methods: {
     getPendingPosts() {
-      debugger;
       const url = "/apinew/getPendingPosts/";
       axios({
         method: "get",
         url: url,
       })
         .then((response) => {
-          debugger;
           if (response.status === 200) {
             this.rents = response.data.posts;
           }
@@ -140,7 +138,6 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            debugger;
             this.posts = response.data.posts;
           }
         })
@@ -152,7 +149,6 @@ export default {
       const url = "/apinew/changePendingToActive/";
       var form = new FormData();
       form.append("post_id", post.post_id);
-      debugger;
       post.isAcceptModal = false;
       axios({
         method: "post",
@@ -172,7 +168,6 @@ export default {
       const url = "/apinew/changePendingToReject/";
       var form = new FormData();
       form.append("post_id", post.post_id);
-      debugger;
       post.isRejectModal = false;
       axios({
         method: "post",

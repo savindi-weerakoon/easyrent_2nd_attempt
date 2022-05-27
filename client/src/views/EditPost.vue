@@ -99,7 +99,6 @@ export default {
         data: form,
       })
         .then((response) => {
-          debugger
           this.$toast.success('You have successfully updated your post')
           this.$router.push({ path: "/" });
           console.log(response);

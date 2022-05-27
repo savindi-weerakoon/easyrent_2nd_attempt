@@ -76,7 +76,6 @@ export default {
           this.summary.gross = response.data.gross
           this.summary.month_income = response.data.month_income
           this.summary.count_month = response.data.count_month
-          debugger
         }
       })
       .catch(error => {

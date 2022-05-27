@@ -258,7 +258,6 @@ export default {
       return new Date(getFormattedDate);
     },
     minimumToDate() {
-      debugger;
       const getTodaydate = moment();
       const getTomorrowDate = getTodaydate.add(1, "days");
       const fromDate = this.fromDate ? moment(this.fromDate) : getTomorrowDate;
@@ -294,16 +293,20 @@ export default {
         form.append("from_date", formattedFromDate);
         form.append("to_date", formattedToDate);
         form.append("post_id", this.postId);
+        form.append("finalPrice", this.finalPrice);
+        // if (this.user.user_id === this.post.user_id) {
+        //   this.$toast.error("You cannot reserve your own item");
+        // } 
         axios({
           method: "post",
           url: url,
           data: form,
         })
           .then((response) => {
-            debugger;
             alert(
               "Your reference number is: " + response.data.reference_number
             );
+            // this.$router.push({ path: "/" });
           })
           .catch((error) => {
             console.error(error);

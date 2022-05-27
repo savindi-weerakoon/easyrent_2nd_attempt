@@ -21,17 +21,16 @@
           :key="category.category_id"
         >
           <router-link
-            class="text-dark"
+            class="text-dark cursor-pointer"
             :to="'/category/' + category.category_id"
           >
-            <small
-              ><label role="button"
-                >{{ category.category_name }}
-                <span class="badge badge-pill badge-success">{{
-                  category.post_count
-                }}</span></label
-              ></small
-            >
+            <small class="cursor-pointer">
+              <label class="cursor-pointer" role="button">{{ category.category_name }}
+                <span class="badge badge-pill badge-success">
+                  {{category.post_count}}
+                </span>
+              </label>
+            </small>
           </router-link>
         </li>
       </ul>

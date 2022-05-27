@@ -74,7 +74,6 @@ export default {
       var form = new FormData();
       form.append("username", this.username);
       form.append("password", this.password);
-      debugger
       if (this.username.trim() == "") {
         this.$toast.error("Username is required");
       } else if (this.password.trim() == "") {
@@ -113,7 +112,6 @@ export default {
               Cookies.set("token", token);
               Cookies.set("user", userString);
             }
-            debugger;
             this.$router.push({ path: "/" });
             setTimeout(() => {
               document.location.reload(true);

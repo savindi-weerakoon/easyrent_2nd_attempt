@@ -49,7 +49,6 @@ export default {
         url: url
       })
       .then(response => {
-        debugger
         if (response.status === 200) {
           this.posts = response.data.posts
         }
